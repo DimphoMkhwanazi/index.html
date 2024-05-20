@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title> R:What is R? </title> 
+</head>
+<body>
+    <h1>What is R?</h1>
+   <h2> Introduction to R </h2> 
+   <p> R is a language and environment for statistical computing and graphics. It is a GNU project which is similar to the S language and environment which was developed at Bell Laboratories (formerly AT&T, now Lucent Technologies) by John Chambers and colleagues.R can be considered as a different implementation of S. There are some important differences, but much code written for S runs unaltered under R.
+
+R provides a wide variety of statistical (linear and nonlinear modelling, classical statistical tests, time-series analysis, classification, clustering, …) and graphical techniques, and is highly extensible. The S language is often the vehicle of choice for research in statistical methodology, and R provides an Open Source route to participation in that activity.
+
+One of R’s strengths is the ease with which well-designed publication-quality plots can be produced, including mathematical symbols and formulae where needed. Great care has been taken over the defaults for the minor design choices in graphics, but the user retains full control.
+
+R is available as Free Software under the terms of the Free Software Foundation’s GNU General Public License in source code form. It compiles and runs on a wide variety of UNIX platforms and similar systems (including FreeBSD and Linux), Windows and MacOS. </p>
+<h2> The R enviroment </h2> 
+<p> The R environment
+R is an integrated suite of software facilities for data manipulation, calculation and graphical display. It includes
+<ul>
+<li>an effective data handling and storage facility,</li>
+<li>a suite of operators for calculations on arrays, in particular matrices,</li>
+<li>a large, coherent, integrated collection of intermediate tools for data analysis,</li>
+<li>graphical facilities for data analysis and display either on-screen or on hardcopy, and<li>
+<li>a well-developed, simple and effective programming language which includes conditionals, loops, user-defined recursive functions and input and output facilities.</li>
+</ul>
+The term “environment” is intended to characterize it as a fully planned and coherent system, rather than an incremental accretion of very specific and inflexible tools, as is frequently the case with other data analysis software.
+
+R, like S, is designed around a true computer language, and it allows users to add additional functionality by defining new functions. Much of the system is itself written in the R dialect of S, which makes it easy for users to follow the algorithmic choices made. For computationally-intensive tasks, C, C++ and Fortran code can be linked and called at run time. Advanced users can write C code to manipulate R objects directly.
+
+Many users think of R as a statistics system. We prefer to think of it as an environment within which statistical techniques are implemented. R can be extended (easily) via packages. There are about eight packages supplied with the R distribution and many more are available through the CRAN family of Internet sites covering a very wide range of modern statistics.
+
+R has its own LaTeX-like documentation format, which is used to supply comprehensive documentation, both on-line in a number of formats and in hardcopy. </p>
+<h3> Simple Linear Regression</h3> 
+<p>
+<ul>
+<li>data(iris)</li>
+<li># Fit the simple linear regression model</li>
+<li>model <- lm(Sepal.Length ~ Sepal.Width, data = iris)</li>
+# Print the model summary
+<li>summary(model)</li>
+</ul>
+ </p> 
+ <h3> Multiple Linear Regression </h3> 
+<p> 
+<ul>
+# Fit the multiple linear regression model
+<li>model <- lm(mpg ~ wt + disp + hp, data = mtcars)</li>
+<li># Print the model summary</li>
+<li>summary(model)</li>
+</ul> 
+</p> 
+<h3> Logistic Regression </h3> 
+<p>
+<ul>
+ <li># Fit the logistic regression model</li>
+<li>model <- glm(vs ~ mpg + wt + hp, data = mtcars, family = binomial)</li>
+<li># Print the model summary</li>
+<li>summary(model)</li>
+</ul>
+</p>
+<h3> Regression Line </h3> 
+<p> 
+<ul>
+<li>ggplot(mtcars, aes(x=wt, y=mpg)) +</li>
+<li>geom_point()</li>
+<li>simple_model <- lm(mpg ~ wt, data = mtcars)</li>
+<li>summary(simple_model)</li>
+  <li>Plotting the regression line</li>
+<li>ggplot(mtcars, aes(x=wt, y=mpg)) +</li>
+<li>geom_point() +</li>
+<li>geom_smooth(method=lm, se=FALSE, color="red", linetype="dashed") +</li>
+<li>theme_minimal() +</li>
+<li>labs(title="Simple Linear Regression: MPG vs Weight",</li>
+<li>x="Weight",</li>
+<li>y="Miles per Gallon",</li>
+<li>caption="Red line represents the regression line")</li>
+</ul>
+</p>
+<h3> Straight Lined </h3> 
+<p>
+<ul>
+<li>multiple_model <- lm(mpg ~ wt + hp, data = mtcars)</li>
+<li>summary(multiple_model)</li>
+<li># Print the fitted values</li>
+<li>fitted_values <- multiple_model$fitted.values</li>
+<li>print(fitted_values)</li>
+<li># Print the residuals</li>
+<li>residual_values <- multiple_model$residuals</li>
+<li>print(residual_values)</li>
+<li># Create a data frame containing observed mpg, fitted values, and residuals</li>
+<li>results <- data.frame(</li>
+ <li>Observed = mtcars$mpg,</li>
+ <li>Fitted = fitted_values,</li>
+ <li>Residuals = residual_values</li>
+<li>)</li>
+<li># View the first few rows of the results</li>
+<li>head(results)</li>
+<li>augment(multiple_model)</li>
+<li>ggplot(augment(multiple_model), aes(.fitted, .resid)) +</li>
+<li>geom_point() +</li>
+<li>geom_hline(yintercept = 0, linetype = "dashed", color = "red") +</li>
+<li>theme_minimal() +</li>
+<li>labs(title="Residuals vs Fitted Values",</li>
+<li>x="Fitted Values",</li>
+<li>y="Residuals",</li>
+<li>caption="Red line represents y=0")</li>
+</ul>
+</p>
+<h3> SVR </h3> 
+<p>
+<ul>
+<li>svr_model <- svm(mpg ~ wt, data = mtcars, kernel = "radial")</li>
+<li>summary(svr_model)</li>
+<li># Fit the SVR model predicting mpg based on wt and hp</li>
+<li>svr_model <- svm(mpg ~ wt + hp, data = mtcars, type = "eps-regression",</li>
+<li>kernel = "radial")</li>
+<li># Make predictions over a grid to plot</li>
+<li>wt_seq <- seq(min(mtcars$wt), max(mtcars$wt), length.out = 100)</li>
+<li>hp_seq <- seq(min(mtcars$hp), max(mtcars$hp), length.out = 100)</li>
+<li>grid <- expand.grid(wt = wt_seq, hp = hp_seq)</li>
+<li>grid$mpg <- predict(svr_model, newdata = grid)</li>
+<li># Basic plot of the fitted surface</li>
+<li>ggplot(grid, aes(x = wt, y = hp, fill = mpg)) +</li>
+ <li>geom_tile() +</li>
+ <li>geom_contour(aes(z = mpg), color = "white") +</li>
+ <li>labs(title = "SVR Model Prediction of mpg",</li>
+ <li>x = "Weight (1000 lbs)",</li>
+ <li>y = "Horsepower",</li>
+ <li>fill = "Miles per Gallon") +</li>
+ <li>theme_minimal()+</li>
+<li># Optionally add the actual data points</li>
+<li>geom_point(data = mtcars, aes(x = wt, y = hp, color = mpg), size = 3)</li>
+</ul>
+</p>
+<h3> ANN </h3> 
+<p>
+<ul>
+ <li>nn_model <- neuralnet(mpg ~ wt + hp, data = mtcars, hidden = 2)</li>
+<li>print(nn_model)</li>
+<li>predictions <- compute(nn_model, mtcars[,c("wt", "hp")])</li>
+<li>head(predictions$net.result)</li>
+</ul>
+</p>
+<h3> ANN and SVM </h3> 
+<p>
+<ul>
+<li># Split the mtcars data into training and testing datasets</li>
+<li>set.seed(123)</li>
+<li>trainIndex <- createDataPartition(mtcars$mpg, p = .8,</li>
+<li>list = FALSE,</li>
+<li>times = 1)</li>
+<li>mtcarsTrain <- mtcars[ trainIndex,]</li>
+<li>mtcarsTest <- mtcars[-trainIndex,]</li>
+<li># Train a SVM model</li>
+<li>svm_model <- svm(mpg ~ ., data = mtcarsTrain)</li>
+<li># Make predictions</li>
+<li>svm_predictions <- predict(svm_model, mtcarsTest)</li>
+<li># Train a neural network model</li>
+<li>nn_model <- neuralnet(mpg ~ ., data = mtcarsTrain, hidden = 2)</li>
+<li># Make predictions</li>
+<li>nn_predictions <- compute(nn_model, mtcarsTest[,-1])</li>
+<li># Evaluate models</li>
+<li>svm_MSE <- postResample(svm_predictions, mtcarsTest$mpg)<li>
+<li>nn_MSE <- postResample(nn_predictions$net.result, mtcarsTest$mpg)</li>
+<li>print(svm_MSE)</li>
+<li>print(nn_MSE)</li>
+</ul>
+</p>
+<h3> ANN </h3>
+<p> Making use of the iris dataset </p>
+<p>
+data(iris)
+# Convert Species to numerical
+iris$Species <- as.numeric(factor(iris$Species))
+# Split the data into a training set (70% of the data) and a test set (30% of
+the data)
+set.seed(12345)
+trainIndex <- sample(1:nrow(iris), nrow(iris)*0.7)
+trainData <- iris[trainIndex, ]
+testData <- iris[-trainIndex, ]
+# Scale the training and test datasets
+maxs <- apply(trainData, 2, max)
+mins <- apply(trainData, 2, min)
+scaled_trainData <- as.data.frame(scale(trainData, center = mins, scale =
+maxs - mins))
+scaled_testData <- as.data.frame(scale(testData, center = mins, scale = maxs
+- mins)) # use the same scaling parameters
+# Specify the formula
+vars <- names(trainData)
+f <- as.formula(paste("Species ~", paste(vars[!vars %in% "Species"], collapse
+= " + ")))
+# Train the neural network
+set.seed(12345)
+nn <- neuralnet(f, data = scaled_trainData, hidden = 5)
+# Plot the neural network
+plotnet(nn, alpha = 0.5)
+# Generate predictions on the test set
+testPredictors <- scaled_testData[, vars[!vars %in% "Species"]]
+predictions <- predict(nn, testPredictors)
+# Rescale the predicted values
+predicted <- predictions * (maxs["Species"] - mins["Species"]) +
+mins["Species"]
+# Round the predicted values and clamp them to the range 1-3
+predicted_rounded <- pmin(pmax(round(predicted), 1), 3)
+# Calculate the accuracy
+actuals <- testData$Species
+accuracy <- mean(predicted_rounded == actuals)
+print(accuracy)
+</p>
+<h3> SVM </h3> 
+<p>
+# Load Pima Indians Diabetes dataset
+data(PimaIndiansDiabetes)
+diabetes <- PimaIndiansDiabetes
+# Split the data into a training set (70% of the data) and a test set (30% of
+the data)
+set.seed(12345)
+trainIndex <- createDataPartition(diabetes$diabetes, p = 0.7, list = FALSE)
+trainData <- diabetes[trainIndex, ]
+testData <- diabetes[-trainIndex, ]
+# Train the SVM model
+svm_model <- svm(diabetes ~ ., data = trainData, kernel = "radial")
+# Generate predictions on the test set
+predictions <- predict(svm_model, testData)
+# Calculate the accuracy
+accuracy <- sum(predictions == testData$diabetes) / nrow(testData)
+print(accuracy)
+</p>
+<p> Creating the svm plot </p>
+<p> 
+# Load Pima Indians Diabetes dataset
+data(PimaIndiansDiabetes)
+diabetes <- PimaIndiansDiabetes
+# Select only two variables and the target
+df <- diabetes[, c("glucose", "mass", "diabetes")]
+# Train the SVM model
+svm_model <- svm(diabetes ~ ., data = df, kernel = "linear")
+# Create a grid for the plot
+grid <- expand.grid(glucose = seq(min(df$glucose), max(df$glucose),
+length.out = 100),
+ mass = seq(min(df$mass), max(df$mass), length.out = 100))
+# Predict the grid to get decision values
+grid$diabetes <- predict(svm_model, grid)
+# Plot the decision boundary and the data points
+ggplot(df, aes(glucose, mass)) +
+ geom_tile(data = grid, aes(fill = diabetes), alpha = 0.5) +
+ geom_point(aes(color = diabetes)) +
+ scale_fill_brewer(palette = "Set1") +
+ scale_color_brewer(palette = "Set1") +
+ theme_minimal() +
+ labs(title = "SVM Decision Boundary", x = "Glucose", y = "Mass", fill =
+"Diabetes", color = "Diabetes")
+</p>
+<h3> Linear Discriminant Analysis</h3> 
+<p> 
+# Load the iris dataset
+data(iris)
+# Split the data into a training set (70% of the data) and a test set (30% of
+the data)
+set.seed(12345)
+trainIndex <- createDataPartition(iris$Species, p = 0.7, list = FALSE)
+trainData <- iris[trainIndex, ]
+testData <- iris[-trainIndex, ]
+# Train the LDA model
+lda_model <- lda(Species ~ ., data = trainData)
+# Generate predictions on the test set
+predictions <- predict(lda_model, testData)$class
+# Calculate the accuracy
+accuracy <- sum(predictions == testData$Species) / nrow(testData)
+print(accuracy)
+# Create a data frame for plotting
+plotData <- cbind(as.data.frame(predict(lda_model)$x), Species =
+trainData$Species)
+# Plot the LDA values
+ggplot(plotData, aes(LD1, LD2)) +
+ geom_point(aes(color = Species)) +
+ theme_minimal() +
+ labs(title = "Linear Discriminant Analysis", x = "LD1", y = "LD2", color =
+"Species")
+</p>
+<h3> Quadratic Duscriminant </h3>
+<p>
+# Train the QDA model
+qda_model <- qda(diabetes ~ ., data = trainData)
+# Generate predictions on the test set
+predictions <- predict(qda_model, testData)$class
+# Calculate the accuracy
+accuracy <- sum(predictions == testData$diabetes) / nrow(testData)
+print(accuracy)
+</p>
+<h3> Principal Component Analysis</h3> 
+<p>
+# Load the USArrests dataset
+data(USArrests)
+# Normalize the data
+USArrests_scaled <- scale(USArrests)
+# Perform PCA
+pca_model <- prcomp(USArrests_scaled, center = TRUE, scale. = TRUE)
+# Print a summary of the PCA model
+summary(pca_model)
+## Importance of components:
+## PC1 PC2 PC3 PC4
+## Standard deviation 1.5749 0.9949 0.59713 0.41645
+## Proportion of Variance 0.6201 0.2474 0.08914 0.04336
+## Cumulative Proportion 0.6201 0.8675 0.95664 1.00000
+# Create a biplot of the PCA model
+biplot(pca_model, scale = 0)
+</p>
+<h3> Cluster Analysis </h3> 
+<p> 
+<ul>
+<li># Load the USArrests dataset</li>
+<li>data(USArrests)</li>
+<li># Normalize the data</li>
+<li>USArrests_scaled <- scale(USArrests)</li>
+<li># Perform K-means clustering with 4 clusters</li>
+<li>set.seed(12345) # For reproducibility</li>
+<li>kmeans_model <- kmeans(USArrests_scaled, centers = 4)</li>
+<li># Print the cluster assignments</li>
+<li>print(kmeans_model$cluster)</li>
+<li># Plot the clusters</li>
+<li>clusplot(USArrests_scaled, kmeans_model$cluster, color=TRUE, shade=TRUE,</li>
+<li>labels=2, lines=0)</li>
+</ul>
+</p>
+<h3> Analysis Of Variance</h3> 
+<p>
+# Load the data
+data(iris)
+# Perform one-way ANOVA
+anova_result <- aov(Sepal.Length ~ Species, data = iris)
+# Print a summary of the ANOVA model
+summary(anova_result)
+</p>
+<h3> Multivariate ANOVA</h3> 
+<p>
+# Load the necessary library
+library(stats) # For MANOVA() function
+library(datasets) # For mtcars dataset
+# Load the data
+data(mtcars)
+# Convert cyl and am variables to factors
+mtcars$cyl <- factor(mtcars$cyl)
+mtcars$am <- factor(mtcars$am)
+# Fit the MANOVA model
+manova_model <- manova(cbind(mpg, disp, hp) ~ cyl + am, data = mtcars)
+# Print a summary of the MANOVA model
+summary(manova_model)
+</p>
+<h3> Functions </h3> 
+<p>
+add_numbers <- function(x, y) {
+ result <- x + y
+ return(result)
+}
+</p>
+</body>
+</html>
